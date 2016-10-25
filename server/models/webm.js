@@ -6,7 +6,14 @@ var WebmSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  description: {
+    type: String
+  },
   urlToVideo: {
+    type: String,
+    required: true
+  },
+  uploader_id: {
     type: String,
     required: true
   }
