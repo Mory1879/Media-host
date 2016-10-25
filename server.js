@@ -282,7 +282,7 @@ apiRoutes.get('/search', passport.authenticate('jwt', {session: false}), functio
   }
 });
 
-apiRoutes.get('/user/:id', function(req, res) {
+apiRoutes.get('/user/:id', passport.authenticate('jwt', {session: false}), function(req, res) {
     var user = {};
     User.findById(req.params.id, function (err, resUser) {
       if (!resUser) {
