@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-sm-4 col-sm-offset-4">
+    <h1 class="text-center" ng-hide="reg" var="reg" ng-click="reg=true; wrPass=false">Log in</h1>
+    <h1 class="text-center" ng-show="reg" var="reg" ng-click="reg=false">Register</h1>
+    <h6 class="text-center">Click on text above to register</h6>
+    <hr>
+    <p class="bg-danger text-center" ng-show="wrPass">Wrong login or password</p>
+    <form ng-hide="reg" class="" method="post">
+      <div class="form-group">
+        <input type="text" class="form-control" ng-model="auth.login" placeholder="Enter login here">
+      </div>
+
+      <div class="form-group">
+        <input type="password" class="form-control" ng-model="auth.pass" placeholder="Enter password here">
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="btn btn-primary btn-block btn-lg" name="name" ng-click="signin()" value="Login">
+      </div>
+    </form>
+    <form ng-show="reg" class="" action="" method="post">
+      <div class="form-group">
+        <input type="text" class="form-control" ng-model="register.login" placeholder="Enter login here">
+      </div>
+
+      <div class="form-group">
+        <input type="password" class="form-control" ng-model="register.passwd" placeholder="Enter password here">
+      </div>
+
+      <div class="form-group">
+        <input type="text" class="form-control" ng-model="register.fname" placeholder="Enter firstname here">
+      </div>
+
+      <div class="form-group">
+        <input type="text" class="form-control" ng-model="register.lname" placeholder="Enter lastname here">
+      </div>
+
+      <div class="radio" var="status=true">
+        <label>
+          <input type="radio" name="statusRadios" ng-click="status=true; register.course=null">
+          I'm student
+        </label>
+        <label>
+          <input type="radio" name="statusRadios" ng-click="status=false; register.group=null" checked>
+          I'm teacher
+        </label>
+      </div>
+
+      <div class="form-group" ng-show="status">
+        <input type="text" class="form-control" ng-model="register.group" placeholder="Enter group here">
+      </div>
+
+      <div class="form-group" ng-hide="status">
+        <input type="text" class="form-control" ng-model="register.course" placeholder="Enter course here">
+      </div>
+
+      <div class="form-group">
+        <input type="submit" class="btn btn-primary btn-block btn-lg" ng-click="signup()" name="name" value="Register">
+      </div>
+    </form>
+  </div>
+</div>

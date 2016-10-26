@@ -36,13 +36,16 @@ app.use('/files', express.static(__dirname + '/files'));
 app.use(passport.initialize());
 
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE');
+  res.header('Access-Control-Allow-Credentials', false);
+  res.header('Access-Control-Max-Age', '86400');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
 
-app.post('/',function(req,res){
+
+app.post('/uploadvideo', passport.authenticate('jwt', {session: false}),function(req,res){
   var fstream;
   req.pipe(req.busboy);
   req.busboy.on('file', function (fieldname, file, filename) {
@@ -82,7 +85,7 @@ var auth = function (req, res) {
 
 
 
-require('./server/config/passport')(passport);
+require('./server/config/passport.js')(passport);
 
 
 // app.models = require('./server/models/index');
@@ -199,7 +202,8 @@ apiRoutes.delete('/video/:id', passport.authenticate('jwt', {session: false}), f
 
 apiRoutes.post('/signup', function (req, res) {
   if (!req.body.login || !req.body.password) {
-    res.json({success: false, msg: 'Pass name and passwd'});
+    res.statusCode = 411;
+    res.send({success: false, msg: 'Pass name and passwd'});
   } else {
     var newUser = new User({
       login: req.body.login,
@@ -207,14 +211,17 @@ apiRoutes.post('/signup', function (req, res) {
       fname: req.body.fname,
       lname: req.body.lname,
       group: req.body.group,
+      course: req.body.course,
       privelege: req.body.privelege
     });
 
     newUser.save(function (err) {
       if (err) {
-        return res.json({success: false, msg: 'Login already exists'});
+        res.statusCode = 409;
+        return res.send({success: false, msg: 'Login already exists'});
       }
-      res.json({success: true, msg: 'user created'});
+      res.statusCode = 200;
+      res.send({success: true, msg: 'user created'});
     });
   }
 });
@@ -226,6 +233,7 @@ apiRoutes.post('/auth', function (req, res) {
     if (err) throw err;
 
     if (!user) {
+      res.statusCode = 404;
       res.send({success: false, msg: 'User not found'});
     } else {
       user.comparePassword(req.body.password, function (err, isMatch) {
@@ -234,6 +242,7 @@ apiRoutes.post('/auth', function (req, res) {
           var token = jwt.encode(user, config.secret);
           res.json({success: true, token: "JWT " + token});
         } else {
+          res.statusCode = 401;
           res.send({success: false, msg: 'Wrong password'});
         }
       });
@@ -314,8 +323,8 @@ apiRoutes.get('/user/:id', passport.authenticate('jwt', {session: false}), funct
 });
 
 
-app.use('', apiRoutes);
-
+app.use('/api', apiRoutes);
+mongoose.Promise = global.Promise;
 mongoose.connect(config.database);
 mongoose.connection.once('open', function() {
   console.log('Listening on port 3000...');

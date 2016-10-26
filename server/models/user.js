@@ -21,6 +21,9 @@ var UserSchema = new Schema({
   group: {
     type: String
   },
+  course:{
+    type: String
+  },
   privelege: {
       type: String
   }
