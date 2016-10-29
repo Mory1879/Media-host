@@ -1,1 +1,53 @@
-<p>This is the search view.</p>
+<div class="container">
+  <h3>Search</h3>
+  <div class="row">
+    <div class="col-lg-9">
+      <div class="input-group">
+        <input type="text" class="form-control" aria-label="..." ng-model="search.query">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Find <span class="caret"></span></button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li><a href="" ng-click="searchUser()">Users</a></li>
+            <li><a href="" ng-click="searchVideo()">Videos</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <button type="button" name="button" class="btn btn-default" ng-click="find()">Search</button>
+  </div>
+  <br>
+  <div class="row">
+    <table ng-if="search.type == 'user' && items.msg" class="table table-bordered">
+      <thead>
+        <tr>
+          <td><b>Login</b></td>
+          <td><b>FName</b></td>
+          <td><b>Lname</b></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat='user in items.msg'>
+          <td>{{ user.login }}</td>
+          <td>{{ user.fname }}</td>
+          <td>{{ user.lname }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table ng-if="search.type == 'video' && items.query" class="table table-bordered">
+      <thead>
+        <tr>
+          <td><b>Title</b></td>
+          <td><b>Description</b></td>
+          <td><b>Open</b></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat='video in items.query'>
+          <td>{{ video.title }}</td>
+          <td>{{ video.description }}</td>
+          <td>{{ video.urlToVideo }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

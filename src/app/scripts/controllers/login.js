@@ -11,9 +11,9 @@ angular.module('srcApp')
   .controller('LoginCtrl', function ($rootScope, $scope, $location, $localStorage, Auth) {
     $scope.wrPass = false;
     function successAuth (res) {
+      console.log("succes response: ",res);
       $localStorage.token = res.token;
-      // window.location = '/#/login';
-      $location.path('/');
+      window.location = '/#/login';
     }
 
     $scope.signin = function () {
@@ -46,6 +46,8 @@ angular.module('srcApp')
       Auth.signup(formData, successAuth, function (err) {
         console.log("error response: ", err);
         $rootScope.error = "Failed to signup";
+        $location.path('/');
+        $location.replace();
       });
     };
 
