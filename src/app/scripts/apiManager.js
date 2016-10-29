@@ -32,9 +32,6 @@ angular.module('srcApp.auth', [])
     var tokenClaims = getClaimsFromToken;
 
     return {
-      signup: function (data, success, error) {
-        $http.post(urls.BASE_API + '/signup', data).success(success).error(error);
-      },
       signin: function (data, success, error) {
         $http.post(urls.BASE_API + '/auth', data).success(success).error(error);
       },
@@ -42,6 +39,9 @@ angular.module('srcApp.auth', [])
         tokenClaims = {};
         delete $localStorage.token;
         success();
+      },
+      signup: function (data, success, error) {
+        $http.post(urls.SUPER_BASE + '/register', data).success(success).error(error);
       },
       getTokenClaims: (function () {
         return tokenClaims;

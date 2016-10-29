@@ -19,9 +19,15 @@ angular
   ])
   .constant('urls', {
     BASE: 'http://localhost:9000',
-    BASE_API: 'http://localhost:3000/api'
+    BASE_API: 'http://localhost:3000/api',
+    SUPER_BASE: '127.0.0.1:3000'
   })
   .config(function ($routeProvider, $httpProvider) {
+    $httpProvider.defaults.useXDomain = true;
+    // $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -45,8 +51,6 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-      $httpProvider.defaults.useXDomain = true;
-      delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
     $httpProvider.interceptors.push(function ($q, $location, $localStorage) {
       return {
@@ -58,7 +62,7 @@ angular
           return config;
         },
         'responseError': function (response) {
-          if (response.status === 401 || response.status === 403) {
+          if (response.status === 401 || response.status === 403 || response.status === 405) {
             $location.path("/login");
           }
           return $q.reject(response);
