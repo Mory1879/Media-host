@@ -326,7 +326,7 @@ apiRoutes.get('/user/:id', passport.authenticate('jwt', {session: false}), funct
 
 app.use('/api', apiRoutes);
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect('mongodb://mory:123123@ds137207.mlab.com:37207/heroku_t9lfxjxn');
 mongoose.connection.once('open', function() {
   console.log('Listening on port 3000...');
   app.listen(3000);
