@@ -8,14 +8,18 @@
  * Service in the srcApp.
  */
 angular.module('srcApp')
-  .service('apiWrap', function ($resource, urls) {
-    const Users = $resource(`${urls.BASE_API}/user/:id`, {id: "me"}, {update: {method: "PUT"}});
+  .service('apiWrap', function ($resource, urls, $rootScope, $routeParams) {
+    const Me = $resource(`${urls.BASE_API}/user/:id`, {id: $rootScope.me._id}, {update: {method: "PUT"}});
+    const Users = $resource(`${urls.BASE_API}/user/:id`, {id: $routeParams.id});
     const Search = $resource(`${urls.BASE_API}/search`);
-    const Upload = $resource();
+    const AddVideo = $resource(`${urls.BASE_API}/video`, {} , {upload: {method: "POST"}});
+    const Video = $resource(`${urls.BASE_API}/video/:id`, {id: $routeParams.id});
 
     return {
+      Me,
       Users,
       Search,
-      Upload
+      AddVideo,
+      Video
     };
   });

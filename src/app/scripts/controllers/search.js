@@ -8,7 +8,7 @@
  * Controller of the srcApp
  */
 angular.module('srcApp')
-  .controller('SearchCtrl', function (apiWrap, $scope, $rootScope, $location, $localStorage) {
+  .controller('SearchCtrl', function (apiWrap, $scope) {
     $scope.search = {};
     $scope.search.query = "";
     $scope.searchUser = function () {
@@ -19,7 +19,7 @@ angular.module('srcApp')
     $scope.searchVideo = function () {
       $scope.search.type = 'video';
       console.log($scope.search);
-    }
+    };
 
     $scope.find = function () {
       apiWrap.Search.get({type: $scope.search.type, query: $scope.search.query}, res => {

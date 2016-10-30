@@ -9,7 +9,7 @@ var multiparty = require('connect-multiparty');
 var multipartyMiddleware = multiparty();
 
 var User = require('./server/models/user.js');
-var webm = require('./server/models/webm.js');
+var Webm = require('./server/models/webm.js');
 
 var config = require('./server/config/database.js');
 
@@ -44,20 +44,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-
-app.post('/uploadvideo', passport.authenticate('jwt', {session: false}),function(req,res){
-  var fstream;
-  req.pipe(req.busboy);
-  req.busboy.on('file', function (fieldname, file, filename) {
-      console.log("Uploading: " + filename);
-      fstream = fs.createWriteStream(__dirname + '/files/' + filename);
-      file.pipe(fstream);
-      fstream.on('close', function () {
-          res.redirect('back');
-      });
-  });
-  res.header('Access-Control-Allow-Origin', '*');
-});
 
 var apiRoutes = express.Router();
 
@@ -94,9 +80,22 @@ require('./server/config/passport.js')(passport);
 //   app.use(route, controller(app, route));
 // });
 
+apiRoutes.post('/uploadvideo', passport.authenticate('jwt', {session: false}),function(req,res){
+  var fstream;
+  req.pipe(req.busboy);
+  req.busboy.on('file', function (fieldname, file, filename) {
+      console.log("Uploading: " + filename);
+      fstream = fs.createWriteStream(__dirname + '/files/' + filename);
+      file.pipe(fstream);
+      fstream.on('close', function () {
+          // res.redirect('back');
+      });
+  });
+});
+
 apiRoutes.get('/video', passport.authenticate('jwt', {session: false}), function (req, res) {
   // auth(req, res);
-  return webm.find(function (err, webm) {
+  return Webm.find(function (err, webm) {
         if (!err) {
             return res.send(webm);
         } else {
@@ -107,7 +106,7 @@ apiRoutes.get('/video', passport.authenticate('jwt', {session: false}), function
     });
 });
 apiRoutes.post('/video', passport.authenticate('jwt', {session: false}), function (req, res) {
-  var webm = new webm({
+  var webm = new Webm({
       title: req.body.title,
       description: req.body.description,
       urlToVideo: req.body.urlToVideo,
@@ -116,7 +115,7 @@ apiRoutes.post('/video', passport.authenticate('jwt', {session: false}), functio
 
     webm.save(function (err) {
         if (!err) {
-            log.info("webm created");
+            // log.info("Webm created");
             return res.send({ status: 'OK', webm:webm });
         } else {
             console.log(err);
@@ -132,13 +131,13 @@ apiRoutes.post('/video', passport.authenticate('jwt', {session: false}), functio
     });
 });
 apiRoutes.get('/video/:id', passport.authenticate('jwt', {session: false}), function (req, res) {
-  return webm.findById(req.params.id, function (err, webm) {
+  return Webm.findById(req.params.id, function (err, webm) {
         if(!webm) {
             res.statusCode = 404;
             return res.send({ error: 'Not found' });
         }
         if (!err) {
-            return res.send({ status: 'OK', webm:webm });
+            return res.send({ webm:webm });
         } else {
             res.statusCode = 500;
             log.error('Internal error(%d): %s',res.statusCode,err.message);
@@ -147,7 +146,7 @@ apiRoutes.get('/video/:id', passport.authenticate('jwt', {session: false}), func
     });
 });
 apiRoutes.put('/video/:id', passport.authenticate('jwt', {session: false}), function (req, res) {
-  return webm.findById(req.params.id, function (err, webm) {
+  return Webm.findById(req.params.id, function (err, webm) {
         if(!webm) {
             res.statusCode = 404;
             return res.send({ error: 'Not found' });
@@ -160,7 +159,7 @@ apiRoutes.put('/video/:id', passport.authenticate('jwt', {session: false}), func
 
         return webm.save(function (err) {
             if (!err) {
-                log.info("webm updated");
+                log.info("Webm updated");
                 return res.send({ status: 'OK', webm:webm });
             } else {
                 if(err.name == 'ValidationError') {
@@ -182,14 +181,14 @@ apiRoutes.delete('/video/:id', passport.authenticate('jwt', {session: false}), f
   var path = '/Users/mory/Documents/Учеба/курсач/Video hosting/files/' + match[2];
   fs.unlink(path, next);
 
-  return webm.findById(req.params.id, function (err, webm) {
+  return Webm.findById(req.params.id, function (err, webm) {
         if(!webm) {
             res.statusCode = 404;
             return res.send({ error: 'Not found' });
         }
         return webm.remove(function (err) {
             if (!err) {
-                log.info("webm removed");
+                log.info("Webm removed");
                 return res.send({ status: 'OK' });
             } else {
                 res.statusCode = 500;
@@ -271,7 +270,7 @@ apiRoutes.get('/search', passport.authenticate('jwt', {session: false}), functio
       });
       break;
     case 'video':
-      webm.find({
+      Webm.find({
         $or: [
           {title: req.query.query},
           {description: req.query.query},
@@ -302,7 +301,7 @@ apiRoutes.get('/user/:id', passport.authenticate('jwt', {session: false}), funct
       if (!err) {
         user.info = resUser;
         user.info.password = "";
-        webm.find({uploader_id: req.params.id}, function(err, webm) {
+        Webm.find({uploader_id: req.params.id}, function(err, webm) {
             if (!webm) {
                 return;
             }
@@ -320,6 +319,21 @@ apiRoutes.get('/user/:id', passport.authenticate('jwt', {session: false}), funct
           log.error('Internal error(%d): %s', res.statusCode, err.message);
           return res.send({error: 'Server error'});
       }
+    });
+});
+
+apiRoutes.put('/user/:id', passport.authenticate('jwt', {session: false}), function(req, res) {
+    console.log(req.body);
+    User.findByIdAndUpdate(req.params.id, {
+        $set: req.body
+    }, {
+        new: true
+    }, function(err, user) {
+        if (err) {
+          res.statusCode = 500;
+          res.send(err);
+        }
+        res.send(user);
     });
 });
 

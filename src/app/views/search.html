@@ -17,6 +17,7 @@
   </div>
   <br>
   <div class="row">
+    <h4 ng-if="search.type == 'user' && items.msg">Users</h4>
     <table ng-if="search.type == 'user' && items.msg" class="table table-bordered">
       <thead>
         <tr>
@@ -27,12 +28,13 @@
       </thead>
       <tbody>
         <tr ng-repeat='user in items.msg'>
-          <td>{{ user.login }}</td>
+          <td><a ng-href="/#/user/{{user._id}}">{{ user.login }}</a></td>
           <td>{{ user.fname }}</td>
           <td>{{ user.lname }}</td>
         </tr>
       </tbody>
     </table>
+    <h4 ng-if="search.type == 'video' && items.query">Videos</h4>
     <table ng-if="search.type == 'video' && items.query" class="table table-bordered">
       <thead>
         <tr>

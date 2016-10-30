@@ -41,8 +41,9 @@
             <ul class="nav navbar-nav">
               <li ng-hide="token"><a href="#/">Home</a></li>
               <li ng-hide="token"><a ng-href="#/login">Login/Register</a></li>
-              <li ng-show="token"><a ng-click="logout()">Logout</a></li>
+              <li ng-show="token"><a ng-href="#/me">My profile</a></li>
               <li ng-show="token"><a ng-href="#/search">Search</a></li>
+              <li ng-show="token"><a ng-click="logout()">Logout</a></li>
             </ul>
           </div>
         </div>
@@ -55,7 +56,7 @@
 
     <div class="footer">
       <div class="container">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+        <p><span class="glyphicon glyphicon-heart"></span> from webmakaka</p>
       </div>
     </div>
 
@@ -80,6 +81,7 @@
     <script src="/bower_components/angular-route/angular-route.js"></script>
     <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="/bower_components/ngstorage/ngStorage.js"></script>
+    <script src="/bower_components/ng-file-upload/ng-file-upload.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -89,6 +91,10 @@
         <script src="scripts/controllers/search.js"></script>
         <script src="scripts/services/apiwrap.js"></script>
         <script src="scripts/apiManager.js"></script>
+        <script src="scripts/controllers/curuser.js"></script>
+        <script src="scripts/controllers/video.js"></script>
+        <script src="scripts/controllers/user.js"></script>
+        <script src="scripts/controllers/upload.js"></script>
         <!-- endbuild -->
 </body>
 </html>

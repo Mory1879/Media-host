@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 // Create the MovieSchema.
-var WebmSchema = new mongoose.Schema({
+var WebmSchema = new Schema({
   title: {
     type: String,
     required: true

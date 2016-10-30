@@ -13,7 +13,7 @@ angular.module('srcApp')
     function successAuth (res) {
       console.log("succes response: ",res);
       $localStorage.token = res.token;
-      window.location = '/#/login';
+      $location.path('/me');
     }
 
     $scope.signin = function () {

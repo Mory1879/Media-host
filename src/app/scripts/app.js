@@ -14,6 +14,7 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngStorage',
+    'ngFileUpload',
     // 'srcApp.apiWrap',
     'srcApp.auth'
   ])
@@ -48,6 +49,37 @@ angular
         controller: 'SearchCtrl',
         controllerAs: 'search'
       })
+      .when('/upload', {
+        templateUrl: 'views/upload.html',
+        controller: 'UploadCtrl',
+        controllerAs: 'upload'
+
+      })
+      .when('/me', {
+        templateUrl: 'views/me.html',
+        controller: 'CurUserCtrl',
+        controllerAs: 'cuc'
+      })
+      .when('/user/:id', {
+        templateUrl: 'views/me.html',
+        controller: 'UserCtrl',
+        controllerAs: 'user'
+      })
+      .when('/video/:id', {
+        templateUrl: 'views/video.html',
+        controller: 'VideoCtrl',
+        controllerAs: 'video'
+      })
+      .when('/video/:id/edit', {
+        templateUrl: 'views/video-edit.html',
+        controller: 'VideoEditCtrl',
+        controllerAs: 'videoEdit'
+      })
+      .when('/upload', {
+        templateUrl: 'views/upload.html',
+        controller: 'UploadCtrl',
+        controllerAs: 'upload'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -69,4 +101,18 @@ angular
         }
       };
     });
+  })
+  .directive('player',function () {
+    return {
+      restrict: 'E',
+      scope: {
+        src: '='
+      },
+      templateUrl: 'views/player.html'
+    };
+  })
+  .filter('trusted', function ($sce) {
+    return function (url) {
+      return $sce.trustAsResourceUrl(url);
+    };
   });

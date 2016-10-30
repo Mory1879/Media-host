@@ -1,0 +1,68 @@
+<div class="container" var="editProfile">
+  <ul class="nav nav-tabs">
+    <li role="presentation"><a href="" ng-class="{active: !editProfile}" ng-click="editProfile = false">My profile</a></li>
+    <li role="presentation" ng-if="you"><a href="" ng-class="{active: !editProfile}" ng-click="editProfile = true">Edit profile</a></li>
+  </ul>
+  <hr>
+  <div ng-hide="editProfile" class="myProfile">
+    <button ng-if="you" type="button" class="btn btn-success" href="#/upload"><a href="#/upload" style="show-decorations: none">Add video</a></button>
+    <div ng-show="editProfile">
+      <span ng-if="error"> {{error}} </span>
+      <form role="form">
+        <div class="row">
+          <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="form-group">
+              <input type="text" ng-model="profile.fname" class="form-control input-lg" placeholder="First Name" tabindex="1">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="form-group">
+              <input type="text" ng-model="profile.lname" class="form-control input-lg" placeholder="Last Name" tabindex="2">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="text" ng-model="profile.login" class="form-control input-lg" placeholder="Login" tabindex="3">
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-md-12"><a href="#" class="btn btn-success btn-block btn-lg" ng-click="saveUser()">Save</a></div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-6">
+        <h3>First name: {{ profile.lname }}</h3>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-6">
+         <h3>Last name: {{ profile.fname }} </h3>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6">
+      <h3>Username: {{ profile.login }}</h3>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6">
+      <h3>You are a {{ profile.privelege }}</h3>
+    </div>
+    <br>
+    <hr>
+    <div ng-if="profile.videos">
+      <h2>Your videos:</h2>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <td><b>Title</b></td>
+            <td><b>Description</b></td>
+            <td><b>Wathc</b></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat='video in profile.videos'>
+            <td>{{ video.title }}</td>
+            <td>{{ video.description }}</td>
+            <td><a type="button" class="btn btn-default" href="#/video/{{video._id}}">Watch</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
