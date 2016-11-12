@@ -21,11 +21,15 @@ var UserSchema = new Schema({
   group: {
     type: String
   },
-  course:{
+  course: {
     type: String
   },
+  subscribtions: {
+    type: [String]
+  },
   privelege: {
-      type: String
+    type: String,
+    required: true
   }
 });
 
@@ -34,10 +38,12 @@ UserSchema.pre('save', function (next) {
   if (this.isModified('password') || this.isNew) {
     bcrypt.genSalt(10, function (err, salt) {
       if (err) {
+        console.log("Salt err: ", err);
         return next(err);
       }
       bcrypt.hash(user.password, salt, function (err, hash) {
         if (err) {
+          console.log("Crypt err", err);
           return next(err);
         }
         user.password = hash;

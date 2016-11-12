@@ -1,11 +1,20 @@
 <div class="container">
   <div class="">
-    <h3>Название</h3>
+    <div ng-if="video.uploader_id == me._id" class="">
+      Video controls:
+      <a ng-href="/#/video/{{video._id}}/edit"><button type="button" class="btn btn-sm btn-warning" name="button">Edit</button></a>
+      <button type="button" class="btn btn-sm btn-danger" name="button" ng-click="delete()">Delete</button>
+    </div>
+    <h3>Title</h3>
     <blockquote><p>{{video.title}}</p></blockquote>
-    <h3>Описание</h3>
+    <h3>Description</h3>
     <blockquote><p>{{video.description}}</p></blockquote>
-    <h3>Плеер</h3>
-    <p>   </p>
+    <h3>Player</h3>
   </div>
+  <p>
+
+  </p>
   <player src='video.urlToVideo'></player>
+  <br>
+  <p> Uploaded by: <a ng-href="/#/user/{{uploader._id}}">{{uploader.login}}</a>  </p>
 </div>

@@ -47,7 +47,7 @@
         <tr ng-repeat='video in items.query'>
           <td>{{ video.title }}</td>
           <td>{{ video.description }}</td>
-          <td>{{ video.urlToVideo }}</td>
+          <td><a type="button" class="btn btn-default" ng-href="#/video/{{video._id}}">Watch</a></td>
         </tr>
       </tbody>
     </table>

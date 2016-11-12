@@ -19,9 +19,9 @@ angular
     'srcApp.auth'
   ])
   .constant('urls', {
-    BASE: 'http://localhost:9000',
-    BASE_API: 'http://localhost:3000/api',
-    SUPER_BASE: '127.0.0.1:3000'
+    // BASE: 'http://localhost:9000',
+    BASE_API: 'http://localhost:3001/api',
+    SUPER_BASE: '127.0.0.1:300'
   })
   .config(function ($routeProvider, $httpProvider) {
     $httpProvider.defaults.useXDomain = true;

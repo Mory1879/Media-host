@@ -1,11 +1,11 @@
-<div class="container" var="editProfile">
+<div class="container">
   <ul class="nav nav-tabs">
-    <li role="presentation"><a href="" ng-class="{active: !editProfile}" ng-click="editProfile = false">My profile</a></li>
-    <li role="presentation" ng-if="you"><a href="" ng-class="{active: !editProfile}" ng-click="editProfile = true">Edit profile</a></li>
+    <li role="presentation" ng-if="you"><a href="" ng-class="{active: myProfile}" ng-click="me()">My profile</a></li>
+    <li role="presentation" ng-if="you"><a href="" ng-class="{active: editProfile}" ng-click="edit()">Edit profile</a></li>
+    <li role="presentation" ng-if="you"><a href="" ng-class="{active: subs}" ng-click="subscribe()">Subscribtions</a></li>
   </ul>
   <hr>
-  <div ng-hide="editProfile" class="myProfile">
-    <button ng-if="you" type="button" class="btn btn-success" href="#/upload"><a href="#/upload" style="show-decorations: none">Add video</a></button>
+  <div class="profile">
     <div ng-show="editProfile">
       <span ng-if="error"> {{error}} </span>
       <form role="form">
@@ -29,40 +29,60 @@
         </div>
       </form>
     </div>
-    <div class="row">
-      <div class="col-xs-12 col-sm-6 col-md-6">
-        <h3>First name: {{ profile.lname }}</h3>
+
+    <div ng-show="myProfile" class="">
+      <a href="#/upload" style="show-decorations: none"><button ng-if="you && profile.privelege == 'teacher'" type="button" class="btn btn-success" href="#/upload">Add video</button></a>
+      <a href="" style="show-decorations: none" ng-if="!subscribed"><button ng-if="!you" type="button" class="btn btn-success" ng-click="subscribe()">Subscribe</button></a>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+          <h3>First name: {{ profile.lname }}</h3>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6">
+           <h3>Last name: {{ profile.fname }} </h3>
+        </div>
       </div>
       <div class="col-xs-12 col-sm-6 col-md-6">
-         <h3>Last name: {{ profile.fname }} </h3>
+        <h3>Username: {{ profile.login }}</h3>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-6">
+        <h3>You are a {{ profile.privelege }}
+          <div ng-if="profile.privelege === 'student'" class="">
+            at {{ profile.group }} group.
+          </div>
+          <div ng-if="profile.privelege === 'teacher'" class="">
+            of {{ profile.course }}.
+          </div>
+        </h3>
+      </div>
+      <br>
+      <hr>
+      <div ng-if="profile.videos">
+        <h2>Your videos:</h2>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <td><b>Title</b></td>
+              <td><b>Description</b></td>
+              <td><b>Watch</b></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat='video in profile.videos'>
+              <td>{{ video.title }}</td>
+              <td>{{ video.description }}</td>
+              <td><a type="button" class="btn btn-default" ng-href="#/video/{{video._id}}">Watch</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3>Username: {{ profile.login }}</h3>
-    </div>
-    <div class="col-xs-12 col-sm-6 col-md-6">
-      <h3>You are a {{ profile.privelege }}</h3>
-    </div>
-    <br>
-    <hr>
-    <div ng-if="profile.videos">
-      <h2>Your videos:</h2>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <td><b>Title</b></td>
-            <td><b>Description</b></td>
-            <td><b>Wathc</b></td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat='video in profile.videos'>
-            <td>{{ video.title }}</td>
-            <td>{{ video.description }}</td>
-            <td><a type="button" class="btn btn-default" href="#/video/{{video._id}}">Watch</a></td>
-          </tr>
-        </tbody>
-      </table>
+
+    <div ng-show="subs" class="">
+      <div class="row" ng-repeat='subs in subscribtions'>
+        <div class="col-md-8" >
+          <h3>{{subs.fname}} {{subs.lname}} <a ng-href="/#/user/{{subs._id}}" style="show-decorations: none"><button class="btn btn-default" type="button">To profile</button></a>      <button class="btn btn-danger" type="button" ng-click="unsub(subs._id)">Unsub</button></h3>
+        </div>
+      </div>
     </div>
   </div>
 </div>

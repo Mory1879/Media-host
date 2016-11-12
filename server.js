@@ -100,7 +100,7 @@ apiRoutes.get('/video', passport.authenticate('jwt', {session: false}), function
             return res.send(webm);
         } else {
             res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            console.log('Internal error(%d): %s',res.statusCode,err.message);
             return res.send({ error: 'Server error' });
         }
     });
@@ -115,7 +115,7 @@ apiRoutes.post('/video', passport.authenticate('jwt', {session: false}), functio
 
     webm.save(function (err) {
         if (!err) {
-            // log.info("Webm created");
+            console.log("Webm created");
             return res.send({ status: 'OK', webm:webm });
         } else {
             console.log(err);
@@ -126,7 +126,7 @@ apiRoutes.post('/video', passport.authenticate('jwt', {session: false}), functio
                 res.statusCode = 500;
                 res.send({ error: 'Server error' });
             }
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            console.log('Internal error(%d): %s',res.statusCode,err.message);
         }
     });
 });
@@ -140,7 +140,7 @@ apiRoutes.get('/video/:id', passport.authenticate('jwt', {session: false}), func
             return res.send({ webm:webm });
         } else {
             res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            console.log('Internal error(%d): %s',res.statusCode,err.message);
             return res.send({ error: 'Server error' });
         }
     });
@@ -159,7 +159,7 @@ apiRoutes.put('/video/:id', passport.authenticate('jwt', {session: false}), func
 
         return webm.save(function (err) {
             if (!err) {
-                log.info("Webm updated");
+                console.log("Webm updated");
                 return res.send({ status: 'OK', webm:webm });
             } else {
                 if(err.name == 'ValidationError') {
@@ -169,7 +169,7 @@ apiRoutes.put('/video/:id', passport.authenticate('jwt', {session: false}), func
                     res.statusCode = 500;
                     res.send({ error: 'Server error' });
                 }
-                log.error('Internal error(%d): %s',res.statusCode,err.message);
+                console.log('Internal error(%d): %s',res.statusCode,err.message);
             }
         });
     });
@@ -177,9 +177,11 @@ apiRoutes.put('/video/:id', passport.authenticate('jwt', {session: false}), func
 apiRoutes.delete('/video/:id', passport.authenticate('jwt', {session: false}), function (req, res) {
 
   var regex = /(https?:\/\/\S{1,15}\/files\/)(\S*\.\S*)/g;
-  var match = regex.exec(req.params.urlToVideo);
+  var match = regex.exec(req.query.urlToVideo);
+  // console.log(req.query);
+  // console.log(match);
   var path = '/Users/mory/Documents/Учеба/курсач/Video hosting/files/' + match[2];
-  fs.unlink(path, next);
+  fs.unlink(path);
 
   return Webm.findById(req.params.id, function (err, webm) {
         if(!webm) {
@@ -188,11 +190,11 @@ apiRoutes.delete('/video/:id', passport.authenticate('jwt', {session: false}), f
         }
         return webm.remove(function (err) {
             if (!err) {
-                log.info("Webm removed");
+                console.log("Webm removed");
                 return res.send({ status: 'OK' });
             } else {
                 res.statusCode = 500;
-                log.error('Internal error(%d): %s',res.statusCode,err.message);
+                console.log('Internal error(%d): %s',res.statusCode,err.message);
                 return res.send({ error: 'Server error' });
             }
         });
@@ -218,10 +220,11 @@ apiRoutes.post('/register', function (req, res) {
       if (err) {
         res.statusCode = 409;
         return res.send({success: false, msg: 'Login already exists'});
+      } else {
+        var token = jwt.encode(newUser, config.secret);
+        // res.statusCode = 200;
+        res.send({success: true, token: "JWT " + token});
       }
-      res.statusCode = 200;
-      var token = jwt.encode(newUser, config.secret);
-      res.json({success: true, token: "JWT " + token, msg: 'user created'});
     });
   }
 });
@@ -310,20 +313,20 @@ apiRoutes.get('/user/:id', passport.authenticate('jwt', {session: false}), funct
                 res.send({success: true, user: user});
             } else {
                 res.statusCode = 500;
-                log.error('Internal error(%d): %s', res.statusCode, err.message);
+                console.log('Internal error(%d): %s', res.statusCode, err.message);
                 return res.send({error: 'Server error'});
             }
         });
       } else {
           res.statusCode = 500;
-          log.error('Internal error(%d): %s', res.statusCode, err.message);
+          console.log('Internal error(%d): %s', res.statusCode, err.message);
           return res.send({error: 'Server error'});
       }
     });
 });
 
 apiRoutes.put('/user/:id', passport.authenticate('jwt', {session: false}), function(req, res) {
-    console.log(req.body);
+    console.log(req.params.id);
     User.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, {
@@ -338,10 +341,61 @@ apiRoutes.put('/user/:id', passport.authenticate('jwt', {session: false}), funct
 });
 
 
+apiRoutes.put('/user/:id/subscribtions', passport.authenticate('jwt', {session: false}), function (req, res) {
+  console.log("req query", req.query.you);
+  console.log("req route", req.params.id);
+  User.findByIdAndUpdate(req.query.you, {
+    $push: {subscribtions: req.params.id}
+  }, function (err, push) {
+    if (err) {
+      console.log(err);
+      res.statusCode = 500;
+      res.send(err);
+    }
+    // console.log(push);
+    res.send(push);
+  });
+});
+
+apiRoutes.delete('/subscribtions', passport.authenticate('jwt', {session: false}), function (req, res) {
+  console.log(req.query.delUser);
+  User.update(
+    { _id: req.query.curUser },
+    { $pull: { 'subscribtions': req.query.delUser } }, function (err, sub) {
+      if (err) {
+        console.log(err);
+        res.statusCode = 500;
+        res.send(err);
+      }
+      res.send(sub);
+    }
+  );
+});
+
+apiRoutes.post('/subscribtions', passport.authenticate('jwt', {session: false}), function (req, res) {
+  User.findById(req.body._id, function (err, you) {
+    var subs = [];
+    if (err) {
+      console.log(err);
+      res.statusCode = 500;
+      res.send(err);
+    }
+    User.find({'_id': { $in: you.subscribtions}}, function (err, user) {
+      if (err) {
+        res.statusCode = 500;
+        res.send(err);
+      }
+      res.send(user);
+      // console.log(user);
+    });
+  });
+});
+
+
 app.use('/api', apiRoutes);
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database);
 mongoose.connection.once('open', function() {
   console.log('Listening on port 3000...');
-  app.listen(3000);
+  app.listen(3001);
 });

@@ -41,7 +41,7 @@ angular.module('srcApp.auth', [])
         success();
       },
       signup: function (data, success, error) {
-        $http.post(urls.SUPER_BASE + '/register', data).success(success).error(error);
+        $http.post(urls.BASE_API + '/register', data).success(success).error(error);
       },
       getTokenClaims: (function () {
         return tokenClaims;

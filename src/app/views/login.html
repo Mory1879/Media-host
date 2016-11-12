@@ -6,7 +6,7 @@
     <h6 class="text-center" ng-show="reg">Click on text above to login</h6>
     <hr>
     <p class="bg-danger text-center" ng-show="wrPass">Wrong login or password</p>
-    <form ng-hide="reg" class="" method="post">
+    <form ng-hide="reg" name="login" class="" method="post">
       <div class="form-group">
         <input type="text" class="form-control" ng-model="auth.login" placeholder="Enter login here">
       </div>
@@ -19,7 +19,7 @@
         <input type="submit" class="btn btn-primary btn-block btn-lg" name="name" ng-click="signin()" value="Login">
       </div>
     </form>
-    <form ng-show="reg" class="" action="" method="post">
+    <form ng-show="reg" name="register" class="" method="post">
       <div class="form-group">
         <input type="text" class="form-control" ng-model="register.login" placeholder="Enter login here">
       </div>
@@ -56,7 +56,7 @@
       </div>
 
       <div class="form-group">
-        <input type="submit" class="btn btn-primary btn-block btn-lg" ng-click="signup()" name="name" value="Register">
+        <input type="submit" class="btn btn-primary btn-block btn-lg" ng-click="signup()" value="Register">
       </div>
     </form>
   </div>

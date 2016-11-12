@@ -15,12 +15,12 @@ angular.module('srcApp')
       $scope.file = {};
       $scope.file.title = $scope.name;
       $scope.file.description = $scope.desc;
-      $scope.file.urlToVideo = 'http://localhost:3000/files/' + $scope.f.name;
+      $scope.file.urlToVideo = 'http://localhost:3001/files/' + $scope.f.name;
       $scope.file.uploader_id = $rootScope.me._id;
       $scope.errFile = errFiles && errFiles[0];
       if (file) {
         file.upload = Upload.upload({
-          url: 'http://localhost:3000/api/uploadvideo',
+          url: 'http://localhost:3001/api/uploadvideo',
           method: 'POST',
           data: {
             file: file

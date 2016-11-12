@@ -8,11 +8,13 @@
  * Controller of the srcApp
  */
 angular.module('srcApp')
-  .controller('LoginCtrl', function ($rootScope, $scope, $location, $localStorage, Auth) {
+  .controller('LoginCtrl', function ($rootScope, $scope, $location, $localStorage, Auth, $window) {
     $scope.wrPass = false;
     function successAuth (res) {
+      // $window.alert("fucking success");
       console.log("succes response: ",res);
       $localStorage.token = res.token;
+      $rootScope.me = $scope.tokenClaims();
       $location.path('/me');
     }
 
@@ -44,10 +46,11 @@ angular.module('srcApp')
       }
 
       Auth.signup(formData, successAuth, function (err) {
-        console.log("error response: ", err);
-        $rootScope.error = "Failed to signup";
-        $location.path('/');
-        $location.replace();
+        console.log(err);
+        // $window.alert("error fukken: ", err);
+        // $rootScope.error = "Failed to signup";
+        // $location.path('/');
+        // $location.replace();
       });
     };
 

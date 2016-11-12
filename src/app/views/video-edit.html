@@ -1,0 +1,11 @@
+<form role="form">
+  <body>
+    <h4>Title</h4>
+    <input type="text" class="form-control" ng-model="video.title">
+    <h4>Description</h4>
+    <input type="text" class="form-control" ng-model="video.description">
+  </body>
+  <br>
+  <input type="submit" class="btn btn-primary" ng-click="saveWebm()" value="Save"/>
+  <a ng-href="/#/video/{{video._id}}" style="show-decorations: none"><input type="submit" class="btn" value="Cancel"/></a>
+</form>

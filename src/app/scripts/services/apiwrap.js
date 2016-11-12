@@ -13,13 +13,15 @@ angular.module('srcApp')
     const Users = $resource(`${urls.BASE_API}/user/:id`, {id: $routeParams.id});
     const Search = $resource(`${urls.BASE_API}/search`);
     const AddVideo = $resource(`${urls.BASE_API}/video`, {} , {upload: {method: "POST"}});
-    const Video = $resource(`${urls.BASE_API}/video/:id`, {id: $routeParams.id});
+    const Video = $resource(`${urls.BASE_API}/video/:id`, {id: $routeParams.id}, {update: {method: "PUT"}});
+    const Subs = $resource(`${urls.BASE_API}/subscribtions`);
 
     return {
       Me,
       Users,
       Search,
       AddVideo,
-      Video
+      Video,
+      Subs
     };
   });
